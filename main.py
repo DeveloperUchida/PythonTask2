@@ -57,7 +57,7 @@ def chack():
     if map[x][y] == 1:
         for y in range(9):
             for x in range(9):
-                win[f"b{x}{y}"].update("💣" if map[x][y] == 1 else f"{map2[x][y]}")
+                win[f"b{x}{y}"].update("X" if map[x][y] == 1 else f"{map2[x][y]}")
         game_mode = False
     elif map2[x][y] == 0:
         todo_list = [(x, y)]
