@@ -3,9 +3,9 @@ import random
 
 sg.theme("lightBlue2")
 
-map = []  # 2次元リスト1ならそこは地雷
+map = []# 2次元リスト1ならそこは地雷
 map2 = []
-map3 = []  # 2次元リスト1なら開いてる
+map3 = [] # 2次元リスト1なら開いてる
 
 todo_list = []
 chacked = []
@@ -25,7 +25,7 @@ def set_mines(x, y):
             map[xx][yy] = 1
             num_mines += 1
 
-    map2 = [[0 for _ in range(9)] for _ in range(9)]
+    map2 = [[0 for x in range(9)] for y in range(9)]
 
     for x in range(9):
         for y in range(9):
@@ -34,17 +34,17 @@ def set_mines(x, y):
                 for xx in range(max(0, x - 1), min(9, x + 2))
                 for yy in range(max(0, y - 1), min(9, y + 2))
             )
-    map3 = [[0 for _ in range(9)] for _ in range(9)]
+    map3 = [[0 for x in range(9)]for y in range(9)]
 
 
 layout = [
     [sg.T("00:00", k="txt1"), sg.T("⌚10", k="btn2")],
-    [[sg.Button("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
+    [[sg.B("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
 ]
 win = sg.Window("マインスイーパー", layout, font=(None, 9), size=(400, 400), element_padding=(0, 0), finalize=True)
 
 
-def chack(event):
+def chack():
     global game_mode, todo_list, chacked
     x = int(event[1])
     y = int(event[2])
@@ -57,7 +57,7 @@ def chack(event):
     if map[x][y] == 1:
         for y in range(9):
             for x in range(9):
-                win[f"b{x}{y}"].update("X" if map[x][y] == 1 else f"{map2[x][y]}")
+                win[f"b{x}{y}"].update("#" if map[x][y] == 1 else f"{map2[x][y]}")
         game_mode = False
     elif map2[x][y] == 0:
         todo_list = [(x, y)]
@@ -65,6 +65,7 @@ def chack(event):
         expand()
     else:
         win[f"b{x}{y}"].update(f"{map2[x][y]}")
+        map3[x][y] = 1
 
 
 def expand():
@@ -87,14 +88,23 @@ def expand():
                     todo_list.append((xx, yy))  # 必要なら新しい座標をtodo_listに追加
                 else:
                     win[f"b{xx}{yy}"].update(f"{map2[xx][yy]}")
+                map3[xx][yy] = 1
         # todo_listがから強制終了
 
 
-while True:
-    event, values = win.read()
-    if event == sg.WINDOW_CLOSED:
-        break
-    if event.startswith("b"):
-        chack(event)
 
+while True:
+    if 0 < len(todo_list):
+        event, y = win.read(timeout=1)
+        expand()
+    else:
+        event, values = win.read()
+        if event == None:
+            break
+        chack()
+    # map3の中の1の数すなわち合計
+    # total = 0
+    # for x in range(map3)
+    # if map3の中の1の数すなわち合計 == 71:
+    #     win["txt1"].update("クリア!")
 win.close()
