@@ -3,9 +3,9 @@ import random
 
 sg.theme("lightBlue2")
 
-map = []  # 2次元リスト1ならそこは地雷
-map2 = []
-map3 = []  # 2次元リスト1なら開いてる
+map = [[0 for _ in range(9)] for _ in range(9)]  # 2次元リスト1ならそこは地雷
+map2 = [[0 for _ in range(9)] for _ in range(9)]
+map3 = [[0 for _ in range(9)] for _ in range(9)]  # 2次元リスト1なら開いてる
 
 todo_list = []
 chacked = []
@@ -15,8 +15,6 @@ game_mode = False
 
 def set_mines(x, y):
     global game_mode, map, map2, map3
-    map = [[0 for x in range(9)] for y in range(9)]
-
     num_mines = 0
     while num_mines < 1:
         xx = random.randint(0, 8)
@@ -25,8 +23,6 @@ def set_mines(x, y):
             map[xx][yy] = 1
             num_mines += 1
 
-    map2 = [[0 for x in range(9)] for y in range(9)]
-
     for x in range(9):
         for y in range(9):
             map2[x][y] = sum(
@@ -34,7 +30,6 @@ def set_mines(x, y):
                 for xx in range(max(0, x - 1), min(9, x + 2))
                 for yy in range(max(0, y - 1), min(9, y + 2))
             )
-    map3 = [[0 for x in range(9)] for y in range(9)]
 
 
 layout = [
