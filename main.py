@@ -3,9 +3,9 @@ import random
 
 sg.theme("lightBlue2")
 
-map = []# 2次元リスト1ならそこは地雷
+map = []  # 2次元リスト1ならそこは地雷
 map2 = []
-map3 = [] # 2次元リスト1なら開いてる
+map3 = []  # 2次元リスト1なら開いてる
 
 todo_list = []
 chacked = []
@@ -34,12 +34,12 @@ def set_mines(x, y):
                 for xx in range(max(0, x - 1), min(9, x + 2))
                 for yy in range(max(0, y - 1), min(9, y + 2))
             )
-    map3 = [[0 for x in range(9)]for y in range(9)]
+    map3 = [[0 for x in range(9)] for y in range(9)]
 
 
 layout = [
     [sg.T("00:00", k="txt1"), sg.T("⌚10", k="btn2")],
-    [[sg.B("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
+    [[sg.Button("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
 ]
 win = sg.Window("マインスイーパー", layout, font=(None, 9), size=(400, 400), element_padding=(0, 0), finalize=True)
 
@@ -57,7 +57,7 @@ def chack():
     if map[x][y] == 1:
         for y in range(9):
             for x in range(9):
-                win[f"b{x}{y}"].update("#" if map[x][y] == 1 else f"{map2[x][y]}")
+                win[f"b{x}{y}"].update("!" if map[x][y] == 1 else f"{map2[x][y]}")
         game_mode = False
     elif map2[x][y] == 0:
         todo_list = [(x, y)]
@@ -92,19 +92,19 @@ def expand():
         # todo_listがから強制終了
 
 
-
 while True:
     if 0 < len(todo_list):
         event, y = win.read(timeout=1)
         expand()
     else:
         event, values = win.read()
-        if event == None:
+        if event is None:
             break
         chack()
-    # map3の中の1の数すなわち合計
-    # total = 0
-    # for x in range(map3)
-    # if map3の中の1の数すなわち合計 == 71:
-    #     win["txt1"].update("クリア!")
+        # map3の中の1の数すなわち合計
+        total = sum(map3[y][x] for y in range(9) for x in range(9))
+        if total == 71:
+            win["txt1"].update("クリア！")
+            game_mode = False
+
 win.close()
