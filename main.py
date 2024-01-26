@@ -39,12 +39,12 @@ def set_mines(x, y):
 
 layout = [
     [sg.T("00:00", k="txt1"), sg.T("⌚10", k="btn2")],
-    [[sg.B("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
+    [[sg.Button("?", k=f"b{x}{y}", size=(4, 2)) for x in range(9)] for y in range(9)],
 ]
 win = sg.Window("マインスイーパー", layout, font=(None, 9), size=(400, 400), element_padding=(0, 0), finalize=True)
 
 
-def chack():
+def chack(event):
     global game_mode, todo_list, chacked
     x = int(event[1])
     y = int(event[2])
@@ -91,12 +91,10 @@ def expand():
 
 
 while True:
-    if 0 < len(todo_list):
-        event, y = win.read(timeout=1)
-        expand()
-    else:
-        event, values = win.read()
-        if event is None:
-            break
-        chack()
+    event, values = win.read()
+    if event == sg.WINDOW_CLOSED:
+        break
+    if event.startswith("b"):
+        chack(event)
+
 win.close()
