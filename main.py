@@ -1,6 +1,7 @@
 import tkinter as tk
 import random
 import tkinter.messagebox as messagebox
+
 class Minesweeper:
     def __init__(self, master, rows, cols, num_mines):
         self.master = master
@@ -25,6 +26,9 @@ class Minesweeper:
                 button = tk.Button(self.frame, width=2, command=lambda r=row, c=col: self.click(r, c))
                 button.grid(row=row, column=col)
                 self.buttons[row][col] = button
+
+        # ウィンドウのサイズを調整
+        self.master.geometry(f"{self.cols * 30}x{self.rows * 30}")
 
     def place_mines(self):
         mines_placed = 0
@@ -60,7 +64,6 @@ class Minesweeper:
             self.game_over = True
             self.reveal_board()
             messagebox.showinfo("Game Over", "You hit a mine! Game Over.")
-
         else:
             count = self.board[row][col]
             if count == 0:
